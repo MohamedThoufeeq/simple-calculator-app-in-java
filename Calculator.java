@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class Calculator {
+    static Scanner sc = new Scanner(System.in);
+
     public static void main(String[] args) throws Exception {
         System.out.println(
                 "---------------------------------------------------------------------------------------------------------------");
@@ -20,76 +22,222 @@ public class Calculator {
 
         // Read the input from the user
         System.out.print("Enter : ");
-        InputStream inputStream = System.in;
-        Scanner scanner = new Scanner(inputStream);
-        int mathOperation = scanner.nextInt();
+        // InputStream inputStream = System.in;
+        // Scanner scanner = new Scanner(inputStream);
+        int mathOperation = sc.nextInt();
         System.out.println("Selected Math Operation : " + mathOperationArray[mathOperation - 1]);
 
-        // call the corresponding method to perform the operation
+        // the corresponding method to perform the operation
         int selectedMathOpeation = mathOperation - 1;
         switch (selectedMathOpeation) {
             case 0:
-                // call Addition
-                String[] input = Addition.getInput();
-                int sum = Addition.add(input);
+                // Addition
+                String[] input = getInput(mathOperationArray[selectedMathOpeation]);
+                Object sum = ArithmeticOperations.add(input);
                 System.out.println("The sum is : " + sum);
+                break;
+            case 1:
+                // Subtraction
+                String[] subInput = getInput(mathOperationArray[selectedMathOpeation]);
+                Object difference = ArithmeticOperations.subtract(subInput);
+                System.out.println("The difference is : " + difference);
+                break;
+
+            case 2:
+                // Multiplication
+                String[] mulInput = getInput(mathOperationArray[selectedMathOpeation]);
+                Object product = ArithmeticOperations.multiply(mulInput);
+                System.out.println("The product is : " + product);
+                break;
+
+            case 3:
+                // Division
+                String[] divInput = getInputForDivision();
+                Object quotient = ArithmeticOperations.divide(divInput);
+                System.out.println("The result = " + quotient);
+                break;
+
+            case 4:
+                // Square Root
+                String sqrtInput = getInputForSqrRt();
+                Object sqrt = ArithmeticOperations.squareRoot(sqrtInput);
+                System.out.println("The square root is : " + sqrt);
+                break;
+
+            case 5:
+                // Power
+                String[] powInput = getInput(mathOperationArray[selectedMathOpeation]);
+                Object power = ArithmeticOperations.power(powInput);
+                System.out.println("The result is : " + power);
+                break;
+
+            case 6:
+                // Percentage
+                String[] percentInput = getInputForPercentage();
+                Object percentage = ArithmeticOperations.percentage(percentInput);
+                System.out.println("The percentage is : " + percentage + " %");
                 break;
 
             default:
-                System.out.println("Eneter proper inputs :-/");
+                System.out.println("Enter valid inputs :-/");
         }
-        scanner.close();
+        System.in.close();
     }
 
-}
+    public static String[] getInput(String function) {
 
-class Addition {
-    public static String[] getInput() {
-
-        System.out.println("Enter the numbers you want to add seperated by comma \",\" : ");
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        scanner.close();
-
+        System.out.println("Enter the numbers you want to do " + function + " seperated by comma \",\" : ");
+        // Scanner scanner = new Scanner(System.in);
+        String input = sc.next();
         String[] inputArray = input.split(",");
-
-        for (int i = 0; i < inputArray.length; i++) {
-            inputArray[i] = inputArray[i].trim();
-        }
         return inputArray;
     }
 
-    public static int add(String... x) throws Exception {
-        int sum = 0;
+    public static String[] getInputForDivision() {
+        System.out.print("Enter the Dividend :");
+        // Scanner sc = new Scanner(System.in);
+        String dividend = sc.next();
+        System.out.print("Enter the Divisor :");
+        String divisor = sc.next();
+
+        String[] divInput = { dividend, divisor };
+        return divInput;
+    }
+
+    public static String getInputForSqrRt() {
+        System.out.print("Enter the Number you want to find the square root : ");
+        // Scanner sc = new Scanner(System.in);
+        String input = sc.next();
+        return input;
+    }
+
+    public static String[] getInputForPercentage() {
+        System.out.print("Enter the Value : ");
+        String value = sc.next();
+        System.out.print("Enter the Total Value : ");
+        String totalValue = sc.next();
+        String[] input = { value, totalValue };
+        return input;
+    }
+}
+
+class ArithmeticOperations {
+    // Addition
+    public static Object add(String... x) throws Exception {
+        Object sum = null;
+
+        float floatSum = 0f;
         for (String num : x) {
-            if (validateInput(num)) {
-                int input = Integer.parseInt(num);
-                sum += input;
-            } else {
-                throw new Exception("The entered input \""+num+"\" is wrong ...");
-            }
+
+            floatSum += ParseString.parseString(num);
+            sum = floatSum;
+
         }
         return sum;
     }
 
-    public static boolean validateInput(String element) throws Exception {
+    // Subtraction
+    public static Object subtract(String... x) throws Exception {
+        Object difference = null;
+        float floatDifference = ParseString.parseString(x[0]);
+        for (int i = 1; i < x.length; i++) {
+            floatDifference -= ParseString.parseString(x[i]);
+        }
+        difference = floatDifference;
+        return difference;
+    }
 
-        // Parse the String into corresponding NumberFormat
-        Object obj = ParseString.parseString(element);
-        
-        // validate the NumberFormat
-        if (obj instanceof Integer) {
-            return true;
-        } else if (obj instanceof Long) {
-            return true;
-        } else if (obj instanceof Double) {
-            return true;
-        } else if (obj instanceof Float) {
-            return true;
-        } else {
-            return false;
+    // Multiplication
+    public static Object multiply(String... x) throws Exception {
+        Object product = null;
+
+        float floatProduct = 1f;
+        for (String num : x) {
+            floatProduct *= ParseString.parseString(num);
+            product = floatProduct;
+        }
+        return product;
+    }
+
+    // Division
+    public static String divide(String... x) throws Exception {
+        if (x.length != 2) {
+            throw new IllegalArgumentException("Division requires exactly two numbers, A dividend and a divisor");
         }
 
+        float dividend = ParseString.parseString(x[0]);
+        float divisor = ParseString.parseString(x[1]);
+
+        if (divisor == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+
+        float quotient = dividend / divisor;
+        float remainder = dividend % divisor;
+
+        return "Quotient: " + quotient + " , Remainder: " + remainder;
+    }
+
+    // Division
+    public static Object divide1(String... x) throws Exception {
+        if (x.length != 2) {
+            throw new IllegalArgumentException("Division requires exactly two numbers, A dividend and a divisor");
+        }
+
+        Object quotient = null;
+        float floatQuotient = ParseString.parseString(x[0]);
+        float divisor = ParseString.parseString(x[1]);
+
+        if (divisor == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+
+        floatQuotient /= divisor;
+        quotient = floatQuotient;
+
+        return quotient;
+    }
+
+    // Square Root
+    public static Object squareRoot(String x) throws Exception {
+        Object result = null;
+
+        float floatValue = ParseString.parseString(x);
+        if (floatValue < 0) {
+            throw new IllegalArgumentException("Cannot calculate square root of a negative number");
+        }
+        float floatResult = (float) Math.sqrt(floatValue);
+        result = floatResult;
+
+        return result;
+    }
+
+    // Power
+    public static Object power(String... x) throws Exception {
+        if (x.length != 2) {
+            throw new IllegalArgumentException("Power operation requires exactly two numbers");
+        }
+
+        Object result = null;
+        float base = ParseString.parseString(x[0]);
+        float exponent = ParseString.parseString(x[1]);
+
+        float floatResult = (float) Math.pow(base, exponent);
+        result = floatResult;
+
+        return result;
+    }
+
+    // Percentage
+    public static Object percentage(String... x) throws Exception {
+        if (x.length != 2) {
+            throw new IllegalArgumentException("Percentage calculation requires exactly two numbers");
+        }
+        float value = ParseString.parseString(x[0]);
+        float totalValue = ParseString.parseString(x[1]);
+
+        float floatResult = (value / totalValue) * 100;
+        return floatResult;
     }
 }
 
@@ -100,32 +248,13 @@ class ParseString {
      * @return Object
      * @throws Exception
      */
-    public static Object parseString(String input) throws Exception {
+    public static float parseString(String input) throws Exception {
         try {
-            // Attempt to parse as an integer
-            int integerValue = Integer.parseInt(input);
-            return integerValue;
-        } catch (NumberFormatException e) {
-            // If parsing as integer fails, try parsing as a long
-            try {
-                long longValue = Long.parseLong(input);
-                return longValue;
-            } catch (NumberFormatException e1) {
-                // If parsing as long fails, try parsing as a double
-                try {
-                    double doubleValue = Double.parseDouble(input);
-                    return doubleValue;
-                } catch (NumberFormatException e2) {
-                    // If parsing as double fails, try parsing as a float
-                    try {
-                        float floatValue = Float.parseFloat(input);
-                        return floatValue;
-                    } catch (NumberFormatException e3) {
-                        // If parsing as float fails, the input is not a valid number
-                        throw new NumberFormatException("Invalid Number Format. "+"The entered input \""+input+"\" is wrong ...");
-                    }
-                }
-            }
+            return Float.parseFloat(input);
+        } catch (NumberFormatException e3) {
+            // If parsing as float fails, the input is not a valid number
+            throw new NumberFormatException(
+                    "Invalid Number Format. " + "The entered input \"" + input + "\" is wrong ...");
         }
     }
 }

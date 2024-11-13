@@ -12,7 +12,7 @@ public class Calculator {
 
         // Decalare the math operations
         String[] mathOperationArray = { "Addition", "Subraction", "Multiplication", "Division",
-                "Square Root", "Power", "Percentage", "Factorial" };
+                "Square Root", "Power", "Percentage", "Factorial", "Maximum & Minimum", "Average" };
 
         // Display the math operations
         for (int i = 0; i < mathOperationArray.length; i++) {
@@ -81,8 +81,21 @@ public class Calculator {
                 Object factorial = arithmeticOperations.factorial(inputForFactorial);
                 System.out.println("The factorial is : "+factorial);
                 break;
+            case 8:
+                // Maximum & Minimum
+                String[] maxMinInput = getInput(mathOperationArray[selectedMathOpeation]);
+                Object[] maxMin = arithmeticOperations.maxMin(maxMinInput);
+                System.out.println("The maximum is : " + maxMin[0] + " and the minimum is : " + maxMin[1]);
+                break;
+            case 9:
+                // Average
+                String[] avgInput = getInput(mathOperationArray[selectedMathOpeation]);
+                Object average = arithmeticOperations.average(avgInput);
+                System.out.println("The average is : " + average);
+                break;
+            
             default:
-                System.out.println("Enter valid inputs :-/");
+                System.out.println("Enter valid input :-/");
         }
         System.in.close();
     }

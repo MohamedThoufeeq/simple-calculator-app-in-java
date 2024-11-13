@@ -101,6 +101,7 @@ class ArithmeticOperations implements Arithmetics{
         float floatResult = (value / totalValue) * 100;
         return floatResult;
     }
+
     // factorial
     @Override
     public Object factorial(String x) throws Exception{
@@ -111,7 +112,37 @@ class ArithmeticOperations implements Arithmetics{
         }
         return fact;
     }
+
+    // Maximum & Minimum
+    @Override
+    public Object[] maxMin(String[] maxMinInput) {
+        Object[] maxMinResult = new Object[2];
+        float max = Float.MIN_VALUE;
+        float min = Float.MAX_VALUE;
+        for (String num : maxMinInput) {
+            float floatNum = Float.parseFloat(num);
+            if (floatNum > max) {
+                max = floatNum;
+            }
+            if (floatNum < min) {
+                min = floatNum;
+            }
+        }
+        maxMinResult[0] = max;
+        maxMinResult[1] = min;
+        return maxMinResult;
+    }
     
+    //Average
+    @Override
+    public Object average(String[] avgInput) throws Exception {
+        float sum = 0f;
+        for (String num : avgInput) {
+            sum += parseString(num);
+        }
+        return sum / avgInput.length;
+    }
+
     /**
      * @Description : Parse the input String into float
      * @param input [Type: String]
@@ -128,5 +159,6 @@ class ArithmeticOperations implements Arithmetics{
                     "Invalid Number Format. " + "The entered input \"" + input + "\" is wrong ...");
         }
     }
+
 
 }
